@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken');
 
 const auth = async (req, res, next) => {
-  const authHead = req.headers.Authorization;
+  const authHead = req.headers.authorization;
   if (!authHead || !authHead.startsWith('Bearer '))
     throw new UnauthenticatedError('invalid token');
 

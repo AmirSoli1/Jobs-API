@@ -14,10 +14,6 @@ const jobSchema = new mongoose.Schema(
       maxLength: [20, 'position name cant exceed 20 characters'],
       minLength: [3, 'position name must be at least 3 characters'],
     },
-    date: {
-      type: Date,
-      required: true,
-    },
     status: {
       type: String,
       enum: ['interview', 'declined', 'pending'],
