@@ -3,7 +3,21 @@ const { NotFoundError } = require('../errors');
 const Job = require('../models/Job');
 
 const getAllJobs = async (req, res) => {
-  const jobs = await Job.find({ createdBy: req.user.userId });
+  const { search, status, jobType, sort } = req.query;
+
+  const jobQuery = { createdBy: req.user.userId };
+
+  if (search) {
+    jobQuery.position = { $regex: search, $options: 'i' };
+  }
+  if (status && status !== 'all') {
+    jobQuery.status = { $regex: status, $options: 'i' };
+  }
+  if (jobType && jobType !== 'all') {
+    jobQuery.jobType = { $regex: jobType, $options: 'i' };
+  }
+
+  const jobs = await Job.find(jobQuery);
   res.status(StatusCodes.OK).json({ jobs });
 };
 

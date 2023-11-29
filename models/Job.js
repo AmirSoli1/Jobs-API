@@ -11,7 +11,7 @@ const jobSchema = new mongoose.Schema(
     position: {
       type: String,
       required: true,
-      maxLength: [20, 'position name cant exceed 20 characters'],
+      maxLength: [50, 'position name cant exceed 20 characters'],
       minLength: [3, 'position name must be at least 3 characters'],
     },
     status: {
@@ -32,7 +32,6 @@ const jobSchema = new mongoose.Schema(
     jobLocation: {
       type: String,
       default: 'my city',
-      required: true,
     },
   },
   { timestamps: true }
