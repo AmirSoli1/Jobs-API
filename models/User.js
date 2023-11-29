@@ -26,6 +26,18 @@ const userSchema = new mongoose.Schema({
     required: [true, ' Please provide a password'],
     minLength: [6, 'password must have at least 6 characters'],
   },
+  lastName: {
+    type: String,
+    trim: true,
+    maxLength: [20, 'last name cant be longer than 20 characters'],
+    default: 'lastName',
+  },
+  location: {
+    type: String,
+    trim: true,
+    maxLength: [20, 'location cant be longer than 20 characters'],
+    default: 'my city',
+  },
 });
 
 userSchema.pre('save', async function () {
