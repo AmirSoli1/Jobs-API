@@ -5,19 +5,32 @@ const Job = require('../models/Job');
 const getAllJobs = async (req, res) => {
   const { search, status, jobType, sort } = req.query;
 
-  const jobQuery = { createdBy: req.user.userId };
+  const queryObj = { createdBy: req.user.userId };
 
   if (search) {
-    jobQuery.position = { $regex: search, $options: 'i' };
+    queryObj.position = { $regex: search, $options: 'i' };
   }
   if (status && status !== 'all') {
-    jobQuery.status = { $regex: status, $options: 'i' };
+    queryObj.status = status;
   }
   if (jobType && jobType !== 'all') {
-    jobQuery.jobType = { $regex: jobType, $options: 'i' };
+    queryObj.jobType = jobType;
   }
 
-  const jobs = await Job.find(jobQuery);
+  let jobsQuery = Job.find(queryObj);
+  if (sort) {
+    const lut = {
+      latest: () => jobsQuery.sort('-createdAt'),
+      oldest: () => jobsQuery.sort('createdAt'),
+      'a-z': () => jobsQuery.sort('position'),
+      'z-a': () => jobsQuery.sort('-position'),
+    };
+
+    lut[sort]();
+  }
+
+  const jobs = await jobsQuery;
+
   res.status(StatusCodes.OK).json({ jobs });
 };
 
