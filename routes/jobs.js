@@ -2,6 +2,7 @@ const express = require('express');
 const jobsRouter = express.Router();
 
 const testUser = require('../middleware/test-user');
+const apiLimiter = require('../middleware/api-limiter');
 
 const {
   getAllJobs,
@@ -11,7 +12,7 @@ const {
   deleteJob,
 } = require('../controllers/jobs');
 
-jobsRouter.route('/').get(getAllJobs).post(testUser, createJob);
+jobsRouter.route('/').get(getAllJobs).post(testUser, apiLimiter, createJob);
 jobsRouter
   .route('/:id')
   .get(getJob)
