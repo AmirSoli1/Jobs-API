@@ -2,10 +2,9 @@ require('dotenv').config();
 require('express-async-errors');
 
 const helmet = require('helmet');
-const cors = require('cors');
 const xss = require('xss-clean');
-const rateLimit = require('express-rate-limit');
 
+const path = require('path');
 const express = require('express');
 const app = express();
 
@@ -17,17 +16,9 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const auth = require('./middleware/authentication');
 
-app.set('trust proxy', 1);
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-  })
-);
-
+app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
 app.use(xss());
 // extra packages
 
@@ -37,6 +28,10 @@ const authRouter = require('./routes/auth');
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/jobs', auth, jobsRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+});
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
