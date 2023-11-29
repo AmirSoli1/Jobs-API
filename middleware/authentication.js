@@ -10,9 +10,10 @@ const auth = async (req, res, next) => {
   const token = authHead.split(' ')[1];
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const testUser = payload.userId === '65672b2b7458a9eb88b8a9d9';
     req.user = {
       userId: payload.userId,
-      name: payload.name,
+      testUser,
     };
     next();
   } catch (err) {

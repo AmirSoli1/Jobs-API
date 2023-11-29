@@ -29,9 +29,17 @@ const getAllJobs = async (req, res) => {
     lut[sort]();
   }
 
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+
+  jobsQuery.skip(limit * (page - 1)).limit(limit);
+
   const jobs = await jobsQuery;
 
-  res.status(StatusCodes.OK).json({ jobs });
+  const totalJobs = await Job.countDocuments(queryObj);
+  const numOfPages = Math.ceil(totalJobs / limit);
+
+  res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages });
 };
 
 const getJob = async (req, res) => {
