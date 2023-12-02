@@ -10,9 +10,11 @@ const {
   createJob,
   updateJob,
   deleteJob,
+  showStats,
 } = require('../controllers/jobs');
 
 jobsRouter.route('/').get(getAllJobs).post(testUser, apiLimiter, createJob);
+jobsRouter.route('/stats').get(showStats);
 jobsRouter
   .route('/:id')
   .get(getJob)
